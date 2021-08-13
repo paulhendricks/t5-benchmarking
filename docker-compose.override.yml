@@ -1,0 +1,11 @@
+# (1) When using `docker-compose up`, docker-compose looks for a
+# file by the name of `docker-compose.override.yml` (this file) and
+# if it exists, will merge it with `docker-compose.yml`. We use this
+# file therefore for configurations that we want *for development only*.
+version: '2.3'
+
+services:
+
+  lab:
+    build: .
+

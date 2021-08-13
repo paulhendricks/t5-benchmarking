@@ -1,0 +1,38 @@
+version: "2.3"
+
+volumes:
+  model_repository:
+
+services:
+
+  triton:
+    command: "tritonserver --model-repository=/models --exit-on-error=false --model-control-mode=poll --repository-poll-secs=30"
+    image: nvcr.io/nvidia/tritonserver:20.12-py3
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=1
+    ipc: host
+    shm_size: "1g"
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    ports:
+      - 6006:6006
+      - 8000:8000
+      - 8001:8001
+      - 8002:8002
+    volumes:
+      - model_repository:/models
+
+  lab:
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=1
+      - JUPYTER_TOKEN
+    ports:
+      - 8888:8888
+    volumes:
+      - ./debug/:/debug/
+      - model_repository:/debug/models
+
+
